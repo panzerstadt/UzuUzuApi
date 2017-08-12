@@ -1,0 +1,12 @@
+start the server
+- double click run_uui_server.bat
+# alternatively, run uui_server.py from command line (python3 uui_server.py)
+
+wait for the server to load (tensorflow takes time)
+
+open a webpage (tested on chrome, but should work on anything)
+
+perform a GET request
+- parameters taken: uui (12 features) and outdoor preference (1 feature)
+- all features are required, otherwise it throws an error (might be a silent error)
+e.g. - http://localhost:8080/?uui=Thu,5,20.8,1,56,0,1.96,30.6,10,2,0.087407407,0.355&outdoor=0.9
