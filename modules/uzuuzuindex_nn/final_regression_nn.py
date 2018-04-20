@@ -97,6 +97,7 @@ def uzu_uzu_index_predictor(train_dataset=None, new_input=False, load_saved_mode
         # load weights into new model
         model.load_weights(directory + r"/trained_nn/model.h5")
         scaler_x = pickle.load(open(directory + r'/trained_nn/model_datascaler.p', 'rb'))
+        scaler_y = pickle.load(open(directory + r'/trained_nn/model_datascaler_y.p', 'rb'))
         print("Loaded model from disk")
         model.compile(loss='mse', optimizer='adam')
 
@@ -167,6 +168,7 @@ def uzu_uzu_index_predictor(train_dataset=None, new_input=False, load_saved_mode
 
         # save scaler for transforming new datasets
         pickle.dump(scaler_x, open(directory + r'/trained_nn/model_datascaler.p', 'wb'))
+        pickle.dump(scaler_y, open(directory + r'/trained_nn/model_datascaler_y.p', 'wb'))
 
         # neural networks to use
 
@@ -230,8 +232,8 @@ def uzu_uzu_index_predictor(train_dataset=None, new_input=False, load_saved_mode
         # score prediction for lstm
 
 
-        result_pred = scaler_y.inverse_transform(predictions)
-        result_truth = scaler_y.inverse_transform(y_test)
+        result_pred = scaler_y.inverse_transform(predictions)  # inverse transform the prediction
+        result_truth = y_test  # do not scale the ground truth!!!!!
 
         output_pred = [x[0] for x in predictions.tolist()]
         output_truth = y_test.tolist()
@@ -270,6 +272,7 @@ def uzu_uzu_index_predictor(train_dataset=None, new_input=False, load_saved_mode
         # make new prediction
         z_test = scaler_x.transform(new_input)
         predictions = model.predict(z_test)
+        predictions = scaler_y.inverse_transform(predictions)  # scaled predictions
     else:
         predictions = [[0]]
 
